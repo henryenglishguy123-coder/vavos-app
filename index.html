@@ -1,0 +1,915 @@
+<meta charset="utf-8">
+<title>VAVOS — Training App Concept</title>
+<style>
+  :root{
+    --ink:#0B0E11;
+    --panel:#12171D;
+    --card:#161D24;
+    --card2:#1B242D;
+    --line:#26303A;
+    --bone:#EDF1F4;
+    --mut:#8494A1;
+    --dim:#5A6975;
+    --sun:#F7A81B;
+    --sun-deep:#C97F06;
+    --ember:#FF5A36;
+    --mint:#4EC9A4;
+    --steel:#7FA3BF;
+    --disp:"Avenir Next Condensed","AvenirNextCondensed-Heavy","Arial Narrow",ui-sans-serif,sans-serif;
+    --body:-apple-system,BlinkMacSystemFont,"Segoe UI",ui-sans-serif,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ink)}
+  body{
+    font-family:var(--body);color:var(--bone);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .d{font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;letter-spacing:.005em}
+  button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+  button:focus-visible,a:focus-visible,.suprow:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+
+  /* ---------- stage / brand board ---------- */
+  .stage{
+    position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:48px 24px;overflow:hidden;
+    background:
+      radial-gradient(1200px 700px at 50% 20%, #11161C 0%, var(--ink) 62%);
+  }
+  .ghost{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    pointer-events:none;user-select:none;
+  }
+  .ghost span{
+    font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;
+    font-size:min(31vw,430px);line-height:.8;letter-spacing:-.01em;
+    color:transparent;-webkit-text-stroke:1px #232D37;
+  }
+  .board{position:absolute;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);line-height:2}
+  .board b{color:var(--mut);font-weight:600}
+  .board .sun{color:var(--sun)}
+  .board-tl{top:28px;left:32px}
+  .board-bl{bottom:28px;left:32px}
+  .board-br{bottom:28px;right:32px;text-align:right}
+  .swatches{display:flex;gap:6px;margin-top:10px}
+  .swatches i{width:22px;height:22px;border-radius:4px;border:1px solid var(--line)}
+
+  /* ---------- phone ---------- */
+  .phone{
+    position:relative;width:394px;height:812px;flex:none;
+    background:var(--ink);
+    border:1px solid #2A343E;border-radius:52px;
+    box-shadow:0 0 0 10px #05070A,0 0 0 11px #2A333C,0 60px 120px -30px rgba(0,0,0,.8);
+    overflow:hidden;
+  }
+  .statusbar{
+    position:absolute;top:0;left:0;right:0;height:44px;z-index:40;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 30px 0;font-size:14px;font-weight:600;pointer-events:none;
+  }
+  .statusbar svg{display:block}
+  .island{
+    position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:118px;height:32px;border-radius:18px;background:#04060A;z-index:41;
+  }
+  .app{position:absolute;inset:0}
+
+  /* ---------- screens ---------- */
+  .screen{
+    position:absolute;inset:0;display:none;flex-direction:column;
+    overflow-y:auto;overscroll-behavior:contain;
+    padding:64px 20px 110px;
+    scrollbar-width:none;
+  }
+  .screen::-webkit-scrollbar{display:none}
+  .screen.active{display:flex}
+  .screen[data-tabbar="off"]{padding-bottom:32px}
+
+  .apphead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+  .wordmark{font-family:var(--disp);font-weight:800;font-style:italic;font-size:19px;letter-spacing:.02em}
+  .wordmark em{color:var(--sun);font-style:italic}
+  .headmeta{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+
+  .kicker{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sun);margin:18px 0 6px}
+  h1.big{font-size:42px;line-height:.92;margin-bottom:4px;text-wrap:balance}
+  .sub{color:var(--mut);font-size:13.5px;line-height:1.5;max-width:30ch}
+
+  /* ---------- paywall ---------- */
+  #scr-pay{padding-top:76px;background:
+    linear-gradient(180deg,rgba(247,168,27,.05),transparent 34%),var(--ink)}
+  .pay-logo{display:flex;align-items:center;gap:10px}
+  .slashmark{color:var(--sun);font-family:var(--disp);font-weight:800;font-style:italic;font-size:22px}
+  .pay-head{font-size:66px;line-height:.85;margin:26px 0 14px}
+  .pay-head .hl{color:var(--sun)}
+  .feat{list-style:none;margin:22px 0;display:flex;flex-direction:column;gap:0}
+  .feat li{
+    display:flex;gap:12px;align-items:center;padding:11px 2px;
+    border-top:1px solid var(--line);font-size:13.5px;color:var(--bone);
+  }
+  .feat li:last-child{border-bottom:1px solid var(--line)}
+  .feat .tag{flex:none;width:52px;font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:13px;color:var(--sun);text-transform:uppercase}
+  .feat .fx{color:var(--mut);font-size:12px;display:block;margin-top:1px}
+  .pricebar{display:flex;align-items:baseline;gap:10px;margin:10px 0 16px}
+  .price{font-size:52px;line-height:1}
+  .per{color:var(--mut);font-size:13px}
+  .cta{
+    display:block;width:100%;padding:17px;border-radius:14px;
+    background:var(--sun);color:#141004;
+    font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;
+    font-size:19px;letter-spacing:.03em;text-align:center;
+  }
+  .cta:active{transform:translateY(1px)}
+  .fine{color:var(--dim);font-size:11.5px;text-align:center;margin-top:12px;letter-spacing:.04em}
+
+  /* ---------- train ---------- */
+  .weekbar{display:flex;justify-content:space-between;align-items:center;margin:20px 0 12px}
+  .weekbar .wk{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+  .weekbar .wk b{color:var(--bone);font-weight:600}
+  .daycard{
+    width:100%;text-align:left;display:flex;align-items:center;gap:14px;
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:15px 16px;margin-bottom:10px;position:relative;
+  }
+  .daycard:active{background:var(--card2)}
+  .daycard .dow{
+    flex:none;width:44px;height:44px;border-radius:10px;background:var(--panel);
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:var(--disp);font-weight:800;font-style:italic;font-size:14px;color:var(--mut);
+  }
+  .daycard.today .dow{background:var(--sun);border-color:var(--sun);color:#141004}
+  .daycard .dn{display:block;font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;text-transform:uppercase;line-height:1.05}
+  .daycard .df{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+  .daycard .dside{margin-left:auto;text-align:right;flex:none}
+  .daycard .dmin{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .st{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    padding:3px 8px;border-radius:99px;margin-bottom:5px}
+  .st.done{color:var(--mint);background:rgba(78,201,164,.1)}
+  .st.today{color:#141004;background:var(--sun)}
+  .st.next{color:var(--dim);background:var(--panel);border:1px solid var(--line)}
+  .strip{height:3px;border-radius:3px;background:var(--panel);margin-top:14px;overflow:hidden}
+  .strip i{display:block;height:100%;width:60%;background:var(--sun);border-radius:3px}
+
+  /* ---------- workout detail ---------- */
+  .backrow{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:13px;margin-bottom:14px;padding:4px 0}
+  .backrow svg{flex:none}
+  .sumline{display:flex;gap:14px;margin:12px 0 18px;color:var(--mut);font-size:12.5px}
+  .sumline b{color:var(--bone);font-weight:600;font-variant-numeric:tabular-nums}
+  .exrow{
+    display:flex;align-items:center;gap:13px;padding:13px 2px;
+    border-top:1px solid var(--line);
+  }
+  .exrow:last-of-type{border-bottom:1px solid var(--line)}
+  .exrow .no{flex:none;width:26px;font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:15px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .exrow .nm{font-size:14px;font-weight:600;line-height:1.25}
+  .exrow .sr{font-size:12px;color:var(--mut);margin-top:2px;font-variant-numeric:tabular-nums}
+  .chip{
+    margin-left:auto;flex:none;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 9px;border-radius:99px;border:1px solid;
+  }
+  .chip.Heavy{color:var(--ember);border-color:rgba(255,90,54,.4);background:rgba(255,90,54,.08)}
+  .chip.Moderate{color:var(--sun);border-color:rgba(247,168,27,.4);background:rgba(247,168,27,.07)}
+  .chip.Light{color:var(--mint);border-color:rgba(78,201,164,.4);background:rgba(78,201,164,.07)}
+  .startwrap{margin-top:auto;padding-top:20px}
+
+  /* ---------- player ---------- */
+  #scr-player{background:
+    radial-gradient(600px 340px at 50% 30%,#141B23 0%,var(--ink) 75%)}
+  .pbar{display:flex;gap:5px;margin:6px 0 18px}
+  .pbar i{flex:1;height:3px;border-radius:3px;background:var(--panel)}
+  .pbar i.on{background:var(--sun)}
+  .figwrap{
+    position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:10px;margin-bottom:18px;
+  }
+  .figwrap svg.fig{display:block;width:100%;height:auto}
+  .fig .b{stroke:var(--bone);stroke-width:8;stroke-linecap:round;fill:none}
+  .fig .b2{stroke:#3A4854;stroke-width:8;stroke-linecap:round;fill:none}
+  .fig .h{fill:var(--bone)}
+  .fig .a{stroke:var(--sun);stroke-width:5;stroke-linecap:round;fill:none}
+  .fig .p{fill:var(--sun)}
+  .fig .gnd{stroke:var(--line);stroke-width:2;stroke-linecap:round}
+  .fig .bench{fill:var(--card2);stroke:var(--line)}
+  .fignum{
+    position:absolute;top:12px;left:16px;font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:15px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .figload{position:absolute;top:12px;right:14px}
+  .exname{font-size:31px;line-height:.95;text-wrap:balance}
+  .schemerow{display:flex;gap:20px;margin:14px 0 12px}
+  .schemerow .cell b{display:block;font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:24px;font-variant-numeric:tabular-nums}
+  .schemerow .cell span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  .cue{
+    border-left:2px solid var(--sun);padding:2px 0 2px 12px;
+    color:var(--mut);font-size:13px;line-height:1.5;margin-bottom:16px}
+  .btnrow{margin-top:auto;display:flex;gap:10px}
+  .btn2{
+    flex:1;padding:16px;border-radius:14px;text-align:center;
+    font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;
+    font-size:17px;letter-spacing:.03em}
+  .btn2.ghosty{border:1px solid var(--line);color:var(--mut)}
+  .btn2.solid{background:var(--sun);color:#141004}
+  .btn2:active{transform:translateY(1px)}
+  .btn2[disabled]{opacity:.35;pointer-events:none}
+
+  /* ---------- done ---------- */
+  #scr-done{align-items:center;justify-content:center;text-align:center;background:
+    radial-gradient(500px 400px at 50% 38%,rgba(247,168,27,.09),transparent 70%),var(--ink)}
+  .bigcheck{width:92px;height:92px;border-radius:50%;background:var(--sun);
+    display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+  .donestats{display:flex;gap:26px;margin:22px 0 34px}
+  .donestats .cell b{display:block;font-family:var(--disp);font-weight:800;font-style:italic;font-size:28px;font-variant-numeric:tabular-nums}
+  .donestats .cell span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+
+  /* ---------- fuel ---------- */
+  .macros{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:16px 0}
+  .kcalrow{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+  .kcalrow b{font-family:var(--disp);font-weight:800;font-style:italic;font-size:34px;font-variant-numeric:tabular-nums}
+  .kcalrow span{color:var(--mut);font-size:12px}
+  .mrow{display:grid;grid-template-columns:16px 1fr 58px;align-items:center;gap:10px;margin-top:9px;font-size:12px}
+  .mrow .ml{color:var(--mut);font-weight:700}
+  .mrow .bar{height:6px;border-radius:6px;background:var(--panel);overflow:hidden}
+  .mrow .bar i{display:block;height:100%;border-radius:6px}
+  .mrow .mg{text-align:right;color:var(--mut);font-variant-numeric:tabular-nums}
+  .mrow .mg b{color:var(--bone);font-weight:600}
+  .meal{display:flex;gap:13px;padding:13px 2px;border-top:1px solid var(--line)}
+  .meal:last-of-type{border-bottom:1px solid var(--line)}
+  .meal .tm{flex:none;width:44px;font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;padding-top:2px}
+  .meal .mn{display:block;font-size:14px;font-weight:600}
+  .meal .mi{display:block;font-size:12px;color:var(--mut);line-height:1.45;margin-top:2px}
+  .meal .mk{margin-left:auto;flex:none;text-align:right;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
+  .meal .mk b{display:block;color:var(--bone);font-weight:600;font-size:13px}
+  .water{display:flex;align-items:center;gap:8px;margin-top:18px}
+  .water .wl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-right:auto}
+  .water i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--steel);cursor:pointer}
+  .water i.on{background:var(--steel);border-color:var(--steel)}
+
+  /* ---------- stack ---------- */
+  .suprow{
+    width:100%;text-align:left;display:flex;align-items:center;gap:13px;
+    padding:14px 2px;border-top:1px solid var(--line)}
+  .suprow:last-of-type{border-bottom:1px solid var(--line)}
+  .suprow .when{
+    flex:none;width:44px;font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:13px;color:var(--sun);text-transform:uppercase}
+  .suprow .sn{font-size:14px;font-weight:600}
+  .suprow .sd{font-size:12px;color:var(--mut);margin-top:2px;line-height:1.4}
+  .suprow .dose{font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tick{
+    margin-left:auto;flex:none;width:24px;height:24px;border-radius:8px;
+    border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
+  .suprow.on .tick{background:var(--mint);border-color:var(--mint)}
+  .suprow.on .sn{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--dim)}
+
+  /* ---------- daily ---------- */
+  .vid{
+    position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);
+    aspect-ratio:16/10;margin:16px 0 14px;cursor:pointer;
+    background:
+      radial-gradient(340px 200px at 78% 18%,rgba(247,168,27,.32),transparent 60%),
+      radial-gradient(300px 240px at 15% 90%,rgba(255,90,54,.16),transparent 55%),
+      linear-gradient(160deg,#1D2732,#0D1116);
+  }
+  .vid .vghost{
+    position:absolute;left:-6px;bottom:-14px;font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:96px;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(237,241,244,.14);
+    text-transform:uppercase;pointer-events:none}
+  .playbtn{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:64px;height:64px;border-radius:50%;background:rgba(237,241,244,.94);
+    display:flex;align-items:center;justify-content:center}
+  .vid .dur{position:absolute;top:12px;right:12px;font-size:11px;font-weight:600;
+    background:rgba(4,6,10,.6);padding:4px 8px;border-radius:6px;font-variant-numeric:tabular-nums}
+  .vprog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(4,6,10,.5)}
+  .vprog i{display:block;height:100%;width:0%;background:var(--sun)}
+  .vid.playing .vprog i{transition:width 24s linear;width:100%}
+  .vmeta{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .vtitle{font-size:24px;line-height:1}
+  .vcoach{font-size:12px;color:var(--mut);margin-top:6px}
+  .streak{
+    flex:none;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sun);
+    border:1px solid rgba(247,168,27,.35);border-radius:99px;padding:5px 11px;font-variant-numeric:tabular-nums}
+  .quote{
+    margin-top:18px;border-left:2px solid var(--sun);padding:4px 0 4px 14px;
+    font-size:15px;line-height:1.55;color:var(--bone)}
+  .quote small{display:block;margin-top:6px;color:var(--dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .drops{margin-top:22px}
+  .droprow{display:flex;align-items:center;gap:12px;padding:11px 2px;border-top:1px solid var(--line);font-size:13px}
+  .droprow:last-child{border-bottom:1px solid var(--line)}
+  .droprow .dd{flex:none;width:40px;color:var(--dim);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+  .droprow .seen{margin-left:auto;color:var(--mint)}
+
+  /* ---------- tab bar ---------- */
+  .tabbar{
+    position:absolute;left:0;right:0;bottom:0;z-index:30;display:none;
+    padding:10px 14px 26px;
+    background:linear-gradient(180deg,rgba(11,14,17,0),rgba(11,14,17,.92) 30%,#0B0E11 60%);
+  }
+  .tabbar.show{display:block}
+  .tabbar .inner{
+    display:flex;background:var(--panel);border:1px solid var(--line);
+    border-radius:18px;padding:6px}
+  .tab{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:8px 4px;border-radius:12px;color:var(--dim);
+    font-family:var(--disp);font-weight:800;font-style:italic;
+    font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .tab svg{display:block}
+  .tab.on{color:var(--sun);background:rgba(247,168,27,.08)}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:560px){
+    .stage{padding:0}
+    .ghost,.board{display:none}
+    .phone{width:100%;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
+    .island{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .vid.playing .vprog i{transition:none}
+  }
+</style>
+
+<div class="stage">
+  <div class="ghost" aria-hidden="true"><span>VAVOS</span></div>
+
+  <div class="board board-tl">
+    <b class="sun">VAVOS®</b> TRAINING CLUB<br>
+    APP CONCEPT — V0.1
+  </div>
+  <div class="board board-bl">
+    <b>PROGRAM</b> 5 DAYS / WEEK · 7 LIFTS / DAY<br>
+    <b>RANGE</b> 5 REPS HEAVY → 12 REPS LIGHT<br>
+    <b>MEMBERSHIP</b> <span class="sun">$20 / MONTH</span>
+    <div class="swatches" aria-hidden="true">
+      <i style="background:#0B0E11"></i><i style="background:#161D24"></i>
+      <i style="background:#F7A81B"></i><i style="background:#FF5A36"></i>
+      <i style="background:#4EC9A4"></i><i style="background:#EDF1F4"></i>
+    </div>
+  </div>
+  <div class="board board-br">
+    TRAIN · FUEL · STACK · DAILY<br>
+    MOCKUP — NOT FOR PRODUCTION
+  </div>
+
+  <div class="phone">
+    <div class="island" aria-hidden="true"></div>
+    <div class="statusbar" aria-hidden="true">
+      <span>9:41</span>
+      <svg width="62" height="12" viewBox="0 0 62 12" fill="none">
+        <rect x="0" y="7" width="3" height="5" rx="1" fill="#EDF1F4"/>
+        <rect x="5" y="5" width="3" height="7" rx="1" fill="#EDF1F4"/>
+        <rect x="10" y="3" width="3" height="9" rx="1" fill="#EDF1F4"/>
+        <rect x="15" y="1" width="3" height="11" rx="1" fill="#EDF1F4"/>
+        <path d="M25 5.5a8 8 0 0 1 11 0M27.5 8a4.5 4.5 0 0 1 6 0M30.5 10.6l-.1.1" stroke="#EDF1F4" stroke-width="1.8" stroke-linecap="round"/>
+        <rect x="41" y="1.5" width="18" height="9" rx="2.6" stroke="#EDF1F4" stroke-opacity=".5"/>
+        <rect x="43" y="3.5" width="12" height="5" rx="1.2" fill="#EDF1F4"/>
+        <path d="M60.5 4.5v3a1.7 1.7 0 0 0 0-3z" fill="#EDF1F4" fill-opacity=".5"/>
+      </svg>
+    </div>
+
+    <div class="app">
+
+      <!-- ============ PAYWALL ============ -->
+      <section class="screen active" id="scr-pay" data-tabbar="off">
+        <div class="pay-logo">
+          <span class="slashmark" aria-hidden="true">⫽</span>
+          <span class="wordmark">VAVOS<em>.</em></span>
+          <span class="headmeta" style="margin-left:auto">TRAINING CLUB</span>
+        </div>
+        <h1 class="d pay-head">Five days.<br>Every week.<br><span class="hl">No debate.</span></h1>
+        <p class="sub">One membership. The whole system — programmed training, fuel, stack and a daily word from your coach.</p>
+
+        <ul class="feat">
+          <li><span class="tag">Train</span><span>5-day split, 7 lifts a day<span class="fx">Guided player · 5 reps heavy → 12 reps light</span></span></li>
+          <li><span class="tag">Fuel</span><span>Daily meal plan &amp; macros<span class="fx">Built around your training days</span></span></li>
+          <li><span class="tag">Stack</span><span>Supplement protocol<span class="fx">What to take, when, and why</span></span></li>
+          <li><span class="tag">Daily</span><span>3-minute mindset drop<span class="fx">A new video every morning</span></span></li>
+        </ul>
+
+        <div class="pricebar">
+          <span class="d price">$20</span>
+          <span class="per">per month<br>cancel anytime</span>
+        </div>
+        <button class="cta" onclick="enterApp()">Start 7-day free trial</button>
+        <p class="fine">Then $20/month. No lock-in, no hidden fees.</p>
+      </section>
+
+      <!-- ============ TRAIN ============ -->
+      <section class="screen" id="scr-train">
+        <div class="apphead">
+          <span class="wordmark">VAVOS<em>.</em></span>
+          <span class="headmeta">THU · AUG 13</span>
+        </div>
+        <p class="kicker">Block 02 — Build · Week 6</p>
+        <h1 class="d big">This week</h1>
+        <p class="sub">Five sessions. Seven lifts each. Heavy first, pump last.</p>
+        <div class="strip" aria-hidden="true"><i style="width:60%"></i></div>
+        <div class="weekbar">
+          <span class="wk"><b>3 of 5</b> sessions done</span>
+          <span class="wk">24 weeks in</span>
+        </div>
+        <div id="daylist"></div>
+      </section>
+
+      <!-- ============ WORKOUT DETAIL ============ -->
+      <section class="screen" id="scr-workout">
+        <button class="backrow" onclick="go('scr-train')">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back to program
+        </button>
+        <p class="kicker" id="wo-kicker"></p>
+        <h1 class="d big" id="wo-title"></h1>
+        <div class="sumline" id="wo-sum"></div>
+        <div id="wo-list"></div>
+        <div class="startwrap">
+          <button class="cta" onclick="startWorkout()">Start workout</button>
+        </div>
+      </section>
+
+      <!-- ============ PLAYER ============ -->
+      <section class="screen" id="scr-player" data-tabbar="off">
+        <button class="backrow" onclick="go('scr-workout')">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="pl-crumb"></span>
+        </button>
+        <div class="pbar" id="pl-bar" aria-hidden="true"></div>
+        <div class="figwrap">
+          <span class="fignum" id="pl-num"></span>
+          <span class="figload" id="pl-loadchip"></span>
+          <div id="pl-fig"></div>
+        </div>
+        <h1 class="d exname" id="pl-name"></h1>
+        <div class="schemerow">
+          <div class="cell"><b id="pl-sets"></b><span>Sets</span></div>
+          <div class="cell"><b id="pl-reps"></b><span>Reps</span></div>
+          <div class="cell"><b id="pl-rest"></b><span>Rest</span></div>
+        </div>
+        <p class="cue" id="pl-cue"></p>
+        <div class="btnrow">
+          <button class="btn2 ghosty" id="pl-prev" onclick="stepEx(-1)">Prev</button>
+          <button class="btn2 solid" id="pl-next" onclick="stepEx(1)">Next lift</button>
+        </div>
+      </section>
+
+      <!-- ============ DONE ============ -->
+      <section class="screen" id="scr-done" data-tabbar="off">
+        <div class="bigcheck">
+          <svg width="40" height="40" viewBox="0 0 40 40"><path d="M10 21l7 7 13-16" stroke="#141004" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="kicker" id="dn-kicker">Day 04 — Upper</p>
+        <h1 class="d big">Session<br>complete.</h1>
+        <div class="donestats" id="dn-stats"></div>
+        <button class="cta" style="width:100%" onclick="finishDay()">Back to program</button>
+        <p class="fine">Same time tomorrow.</p>
+      </section>
+
+      <!-- ============ FUEL ============ -->
+      <section class="screen" id="scr-fuel">
+        <div class="apphead">
+          <span class="wordmark">VAVOS<em>.</em></span>
+          <span class="headmeta">THU · TRAINING DAY</span>
+        </div>
+        <p class="kicker">Fuel — Training day plan</p>
+        <h1 class="d big">Eat like<br>it matters</h1>
+
+        <div class="macros">
+          <div class="kcalrow"><b>2,760</b><span>kcal target · training day</span></div>
+          <div class="mrow"><span class="ml" style="color:var(--sun)">P</span>
+            <span class="bar"><i style="width:28%;background:var(--sun)"></i></span>
+            <span class="mg"><b>195</b> g</span></div>
+          <div class="mrow"><span class="ml" style="color:var(--steel)">C</span>
+            <span class="bar"><i style="width:45%;background:var(--steel)"></i></span>
+            <span class="mg"><b>310</b> g</span></div>
+          <div class="mrow"><span class="ml" style="color:var(--mint)">F</span>
+            <span class="bar"><i style="width:27%;background:var(--mint)"></i></span>
+            <span class="mg"><b>82</b> g</span></div>
+        </div>
+
+        <div class="meal"><span class="tm">07:30</span>
+          <span><span class="mn">Breakfast</span><span class="mi">4 eggs, oats with blueberries &amp; honey</span></span>
+          <span class="mk"><b>640</b>38 g protein</span></div>
+        <div class="meal"><span class="tm">12:30</span>
+          <span><span class="mn">Lunch</span><span class="mi">Chicken thigh, jasmine rice, broccoli, olive oil</span></span>
+          <span class="mk"><b>780</b>52 g protein</span></div>
+        <div class="meal"><span class="tm">16:00</span>
+          <span><span class="mn">Pre-training</span><span class="mi">Greek yogurt, banana, granola</span></span>
+          <span class="mk"><b>420</b>28 g protein</span></div>
+        <div class="meal"><span class="tm">18:30</span>
+          <span><span class="mn">Post-training</span><span class="mi">Whey shake, rice cakes &amp; jam</span></span>
+          <span class="mk"><b>380</b>35 g protein</span></div>
+        <div class="meal"><span class="tm">20:30</span>
+          <span><span class="mn">Dinner</span><span class="mi">Salmon, sweet potato, asparagus</span></span>
+          <span class="mk"><b>540</b>42 g protein</span></div>
+
+        <div class="water" id="water">
+          <span class="wl">Water · 3 L target</span>
+          <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+        </div>
+      </section>
+
+      <!-- ============ STACK ============ -->
+      <section class="screen" id="scr-stack">
+        <div class="apphead">
+          <span class="wordmark">VAVOS<em>.</em></span>
+          <span class="headmeta">THU · AUG 13</span>
+        </div>
+        <p class="kicker">Stack — Daily protocol</p>
+        <h1 class="d big">The stack</h1>
+        <p class="sub">Six things, taken on time, beat twenty taken sometimes.</p>
+        <div style="height:16px"></div>
+        <div id="suplist"></div>
+      </section>
+
+      <!-- ============ DAILY ============ -->
+      <section class="screen" id="scr-daily">
+        <div class="apphead">
+          <span class="wordmark">VAVOS<em>.</em></span>
+          <span class="headmeta">DROP 138</span>
+        </div>
+        <p class="kicker">Daily — Today's drop</p>
+        <div class="vid" id="vid" role="button" tabindex="0" aria-label="Play today's video">
+          <span class="vghost" aria-hidden="true">Show up</span>
+          <span class="dur" id="vdur">3:14</span>
+          <span class="playbtn" id="vplay">
+            <svg width="22" height="22" viewBox="0 0 22 22"><path d="M7 4.5v13l11-6.5z" fill="#0B0E11"/></svg>
+          </span>
+          <span class="vprog"><i id="vfill"></i></span>
+        </div>
+        <div class="vmeta">
+          <div>
+            <h2 class="d vtitle">Discipline outlasts motivation</h2>
+            <p class="vcoach">Coach V · VAVOS Daily Drop · 3 min</p>
+          </div>
+          <span class="streak">
+            <svg width="12" height="14" viewBox="0 0 12 14"><path d="M6 0C7 3 11 4.5 11 9a5 5 0 0 1-10 0C1 6.5 3 5.5 3.5 3 5 4 5.7 5 6 6.5 6.8 5 6.5 2.5 6 0z" fill="currentColor"/></svg>
+            23-day streak
+          </span>
+        </div>
+        <blockquote class="quote">
+          "You don't rise to the occasion. You fall to the level of your training."
+          <small>Today's word</small>
+        </blockquote>
+        <div class="drops">
+          <p class="kicker" style="margin-top:0">This week</p>
+          <div class="droprow"><span class="dd">Wed</span>The boring middle<span class="seen">✓</span></div>
+          <div class="droprow"><span class="dd">Tue</span>Proof over promises<span class="seen">✓</span></div>
+          <div class="droprow"><span class="dd">Mon</span>Start ugly<span class="seen">✓</span></div>
+        </div>
+      </section>
+
+      <!-- ============ TAB BAR ============ -->
+      <nav class="tabbar" id="tabbar">
+        <div class="inner">
+          <button class="tab on" data-scr="scr-train" onclick="tabTo(this)">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M7 7.5v9M17 7.5v9M3.5 9.5v5M20.5 9.5v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Train
+          </button>
+          <button class="tab" data-scr="scr-fuel" onclick="tabTo(this)">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 12h16a8 8 0 0 1-16 0zM9 8c0-1.5 1.2-1.5 1.2-3M13.8 8c0-1.5 1.2-1.5 1.2-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Fuel
+          </button>
+          <button class="tab" data-scr="scr-stack" onclick="tabTo(this)">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="7.5" y="2.5" width="9" height="19" rx="4.5" transform="rotate(45 12 12)" stroke="currentColor" stroke-width="2"/><path d="M8.8 8.8l6.4 6.4" stroke="currentColor" stroke-width="2"/></svg>
+            Stack
+          </button>
+          <button class="tab" data-scr="scr-daily" onclick="tabTo(this)">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg>
+            Daily
+          </button>
+        </div>
+      </nav>
+
+    </div><!-- /app -->
+  </div><!-- /phone -->
+</div>
+
+<script>
+/* ================= data ================= */
+const DAYS = [
+  {dow:'MON', name:'Push', focus:'Chest · Shoulders · Triceps', min:52, state:'done', ex:[
+    ['Barbell Bench Press',4,'5','Heavy','3 min','bench','Bar to mid-chest, drive your feet into the floor.'],
+    ['Incline Dumbbell Press',4,'8','Moderate','2 min','bench','45° bench. Elbows at 60°, not flared.'],
+    ['Seated DB Shoulder Press',3,'8','Moderate','2 min','ohp','Brace hard — no lower-back arch.'],
+    ['Cable Fly',3,'12','Light','60 s','bench','Big stretch, one-second squeeze at the top.'],
+    ['Lateral Raise',3,'12','Light','60 s','raise','Lead with the elbows. No swinging.'],
+    ['Overhead Triceps Extension',3,'10','Moderate','90 s','ohp','Elbows tucked in by the ears.'],
+    ['Rope Pushdown',3,'12','Light','60 s','curl','Split the rope hard at the bottom.'],
+  ]},
+  {dow:'TUE', name:'Pull', focus:'Back · Lats · Biceps', min:54, state:'done', ex:[
+    ['Deadlift',4,'5','Heavy','3 min','hinge','Push the floor away. Bar stays on the legs.'],
+    ['Weighted Pull-Up',4,'6','Heavy','2 min','pullup','Chest to the bar, full hang at the bottom.'],
+    ['Barbell Row',4,'8','Moderate','2 min','row','Torso at 45°. Pull to the hips.'],
+    ['Lat Pulldown',3,'10','Moderate','90 s','pullup','Drive the elbows down, not back.'],
+    ['Seated Cable Row',3,'12','Light','60 s','row','Squeeze the shoulder blades together.'],
+    ['Face Pull',3,'12','Light','60 s','row','Pull to the bridge of the nose.'],
+    ['Barbell Curl',3,'10','Moderate','90 s','curl','Elbows pinned to your sides.'],
+  ]},
+  {dow:'WED', name:'Legs', focus:'Quads · Glutes · Hamstrings', min:56, state:'done', ex:[
+    ['Back Squat',5,'5','Heavy','3 min','squat','Break at hips and knees together. Hit depth.'],
+    ['Romanian Deadlift',4,'8','Moderate','2 min','hinge','Soft knees. Hinge until the hamstrings load.'],
+    ['Leg Press',4,'10','Moderate','90 s','squat','Full range — knees to 90° or deeper.'],
+    ['Walking Lunge',3,'10','Moderate','90 s','lunge','Ten steps per leg, torso tall.'],
+    ['Lying Leg Curl',3,'12','Light','60 s','hinge','Slow negative — three seconds down.'],
+    ['Standing Calf Raise',4,'12','Light','60 s','calf','Pause at the stretch, full lockout at the top.'],
+    ['Hanging Knee Raise',3,'12','Light','60 s','pullup','Knees to chest. No swinging.'],
+  ]},
+  {dow:'THU', name:'Upper', focus:'Shoulders · Back · Arms', min:50, state:'today', ex:[
+    ['Overhead Press',4,'5','Heavy','3 min','ohp','Squeeze the glutes. Bar over mid-foot at lockout.'],
+    ['Weighted Dip',4,'6','Heavy','2 min','pullup','Slight forward lean, elbows to 90°.'],
+    ['Chest-Supported Row',4,'8','Moderate','2 min','row','Chest stays glued to the pad.'],
+    ['Skull Crusher',3,'10','Moderate','90 s','bench','Lower to the forehead, elbows still.'],
+    ['Incline DB Curl',3,'10','Moderate','90 s','curl','Full stretch at the bottom of every rep.'],
+    ['Cable Lateral Raise',3,'12','Light','60 s','raise','Constant tension — no rest at the bottom.'],
+    ['Hammer Curl',3,'12','Light','60 s','curl','Neutral grip, control the way down.'],
+  ]},
+  {dow:'FRI', name:'Engine', focus:'Full body · Conditioning', min:45, state:'next', ex:[
+    ['Front Squat',4,'5','Heavy','3 min','squat','Elbows high. Stay tall out of the hole.'],
+    ['Push Press',4,'6','Heavy','2 min','ohp','Dip, drive, punch the bar overhead.'],
+    ['Kettlebell Swing',4,'12','Light','60 s','swing','Snap the hips. Arms are just ropes.'],
+    ['Dumbbell Snatch',3,'8 / side','Moderate','90 s','swing','One motion, floor to overhead.'],
+    ["Farmer's Carry",3,'40 m','Moderate','90 s','calf','Go heavy. Shoulders back, quick steps.'],
+    ['Box Step-Up',3,'10','Moderate','90 s','lunge','Drive through the top foot only.'],
+    ['Burpees',3,'12','Light','60 s','squat','Chest to the floor, land soft.'],
+  ]},
+];
+
+const SUPS = [
+  ['AM','Creatine Monohydrate','5 g','Every day — training or not.'],
+  ['AM','Vitamin D3','4,000 IU','With breakfast; fat helps absorption.'],
+  ['AM','Fish Oil (Omega-3)','2 g','EPA/DHA combined.'],
+  ['PRE','Caffeine','200 mg','30–45 min before training. Skip after 2 pm.'],
+  ['POST','Whey Isolate','30 g','Within an hour of your last set.'],
+  ['PM','Magnesium Glycinate','400 mg','30 minutes before bed.'],
+];
+
+/* ================= animated figures ================= */
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const EASE = 'keyTimes="0;0.5;1" calcMode="spline" keySplines="0.42 0 0.58 1;0.42 0 0.58 1"';
+const R = (cx,cy,a,b,d=2.2)=>`<animateTransform attributeName="transform" type="rotate" values="${a} ${cx} ${cy};${b} ${cx} ${cy};${a} ${cx} ${cy}" ${EASE} dur="${d}s" repeatCount="indefinite"/>`;
+const T = (x1,y1,x2,y2,d=2.2)=>`<animateTransform attributeName="transform" type="translate" values="${x1} ${y1};${x2} ${y2};${x1} ${y1}" ${EASE} dur="${d}s" repeatCount="indefinite"/>`;
+const SCY = (s1,s2,d=2.2)=>`<animateTransform attributeName="transform" type="scale" values="1 ${s1};1 ${s2};1 ${s1}" ${EASE} dur="${d}s" repeatCount="indefinite"/>`;
+const L = (x1,y1,x2,y2,c='b')=>`<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+const HEAD = (x,y)=>`<circle class="h" cx="${x}" cy="${y}" r="11"/>`;
+const PLATE = (x,y,r=14)=>`<circle class="p" cx="${x}" cy="${y}" r="${r}"/><circle cx="${x}" cy="${y}" r="3.5" fill="#0B0E11"/>`;
+const BELL = (x,y,r=8)=>`<circle class="p" cx="${x}" cy="${y}" r="${r}"/>`;
+const wrap = inner=>`<svg class="fig" viewBox="0 0 240 240" aria-hidden="true">${L(26,212,214,212,'gnd')}${inner}</svg>`;
+
+const FIGS = {
+  squat: (d=2.4)=>wrap(`
+    <g>${R(120,205,0,16,d)}
+      ${L(120,205,120,150)}
+      <g>${R(120,150,0,-98,d)}
+        ${L(120,150,120,102)}
+        <g>${R(120,102,0,112,d)}
+          ${L(120,102,120,58)}
+          ${HEAD(120,40)}
+          ${L(118,66,98,58)}
+          <g>${R(120,58,0,-30,d)}
+            ${L(84,58,156,58,'a')}${BELL(84,58)}${BELL(156,58)}
+          </g>
+        </g>
+      </g>
+    </g>`),
+  hinge: (d=2.4)=>wrap(`
+    <g>${R(120,205,0,6,d)}
+      ${L(120,205,120,152)}
+      <g>${R(120,152,0,-22,d)}
+        ${L(120,152,120,104)}
+        <g>${R(120,104,0,88,d)}
+          ${L(120,104,120,56)}
+          ${HEAD(120,38)}
+          <g>${R(120,62,0,-72,d)}
+            ${L(120,62,120,128)}
+            ${PLATE(120,132)}
+          </g>
+        </g>
+      </g>
+    </g>`),
+  bench: (d=2)=>wrap(`
+    <rect class="bench" x="56" y="152" width="128" height="11" rx="4"/>
+    ${L(72,163,72,208,'b2')}${L(168,163,168,208,'b2')}
+    ${L(88,146,152,146)}${HEAD(170,140)}
+    ${L(88,146,62,172)}${L(62,172,62,206)}
+    <g>${R(150,146,0,-55,d)}
+      ${L(150,146,150,108)}
+      <g>${R(150,108,0,110,d)}
+        ${L(150,108,150,70)}
+        <g>${R(150,70,0,-55,d)}
+          ${L(118,70,182,70,'a')}${PLATE(150,70,12)}
+        </g>
+      </g>
+    </g>`),
+  ohp: (d=2)=>wrap(`
+    ${L(112,208,118,132)}${L(128,208,122,132)}
+    ${L(120,132,120,92)}${HEAD(120,68)}
+    <g>${R(126,94,72,0,d)}
+      ${L(126,94,126,60)}
+      <g>${R(126,60,-144,0,d)}
+        ${L(126,60,126,28)}
+        <g>${R(126,28,72,0,d)}
+          ${L(92,28,160,28,'a')}${BELL(92,28)}${BELL(160,28)}
+        </g>
+      </g>
+    </g>`),
+  row: (d=1.8)=>wrap(`
+    ${L(126,208,120,164,'b2')}
+    ${L(118,208,112,162)}${L(112,162,96,132)}
+    ${L(96,132,148,102)}${HEAD(166,92)}
+    <g>${R(146,104,0,-52,d)}
+      ${L(146,104,146,166)}
+      <g>${R(146,166,0,52,d)}
+        ${L(118,166,174,166,'a')}${PLATE(146,166,12)}
+      </g>
+    </g>`),
+  pullup: (d=2.2)=>wrap(`
+    ${L(60,38,180,38,'a')}
+    <g transform="translate(0,38)"><g>${SCY(1,0.5,d)}<g transform="translate(0,-38)">
+      ${L(96,38,110,96)}${L(144,38,130,96)}
+    </g></g></g>
+    <g>${T(0,0,0,-29,d)}
+      ${HEAD(120,80)}
+      ${L(120,96,120,150)}
+      ${L(120,150,108,176)}${L(108,176,118,200)}
+    </g>`),
+  curl: (d=1.6)=>wrap(`
+    ${L(114,208,119,132)}${L(126,208,121,132)}
+    ${L(120,132,120,92)}${HEAD(120,68)}
+    ${L(124,92,124,128)}
+    <g>${R(124,128,8,-95,d)}
+      ${L(124,128,124,162)}
+      ${BELL(124,164,9)}
+    </g>`),
+  lunge: (d=1.8)=>wrap(`
+    ${L(150,205,152,162)}${L(152,162,120,130)}
+    ${L(84,205,96,168)}${L(96,168,120,130)}
+    <g>${T(0,0,0,13,d)}
+      ${L(120,134,120,88)}${HEAD(120,64)}
+      ${L(120,96,114,140)}${BELL(113,148,8)}
+      ${L(120,96,130,138)}${BELL(131,146,8)}
+    </g>`),
+  swing: (d=1.4)=>wrap(`
+    <g>${R(120,205,0,5,d)}
+      ${L(120,205,120,152)}
+      <g>${R(120,152,0,-15,d)}
+        ${L(120,152,120,104)}
+        <g>${R(120,104,0,70,d)}
+          ${L(120,104,120,58)}
+          ${HEAD(120,40)}
+          <g>${R(120,62,-80,-35,d)}
+            ${L(120,62,120,130)}
+            ${BELL(120,138,11)}
+          </g>
+        </g>
+      </g>
+    </g>`),
+  raise: (d=2)=>wrap(`
+    ${HEAD(120,54)}${L(120,66,120,128)}
+    ${L(120,128,106,206)}${L(120,128,134,206)}
+    <g>${R(108,76,5,80,d)}
+      ${L(108,76,102,132)}${BELL(101,140,8)}
+    </g>
+    <g>${R(132,76,-5,-80,d)}
+      ${L(132,76,138,132)}${BELL(139,140,8)}
+    </g>`),
+  calf: (d=1.4)=>wrap(`
+    <g>${T(0,0,0,-9,d)}
+      ${L(114,206,119,132)}${L(126,206,121,132)}
+      ${L(120,132,120,92)}${HEAD(120,68)}
+      ${L(112,96,106,148)}${BELL(105,156,9)}
+      ${L(128,96,134,148)}${BELL(135,156,9)}
+    </g>`),
+};
+
+/* ================= state & rendering ================= */
+let curDay = 3;      // Thursday
+let curEx = 0;
+const doneDays = new Set([0,1,2]);
+
+const $ = id => document.getElementById(id);
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const scr = $(id);
+  scr.classList.add('active');
+  scr.scrollTop = 0;
+  $('tabbar').classList.toggle('show',
+    scr.dataset.tabbar !== 'off');
+}
+function tabTo(btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  go(btn.dataset.scr);
+}
+function enterApp(){ go('scr-train'); }
+
+function renderDays(){
+  $('daylist').innerHTML = DAYS.map((d,i)=>{
+    const done = doneDays.has(i);
+    const state = done ? 'done' : (d.state==='today' ? 'today' : 'next');
+    const label = done ? 'Done' : (state==='today' ? 'Today' : 'Up next');
+    return `
+    <button class="daycard ${state==='today'?'today':''}" onclick="openDay(${i})">
+      <span class="dow">${d.dow}</span>
+      <span>
+        <span class="dn">Day 0${i+1} — ${d.name}</span>
+        <span class="df">${d.focus}</span>
+      </span>
+      <span class="dside">
+        <span class="st ${state}">${label}</span><br>
+        <span class="dmin">7 lifts · ${d.min} min</span>
+      </span>
+    </button>`;
+  }).join('');
+}
+
+function openDay(i){
+  curDay = i;
+  const d = DAYS[i];
+  $('wo-kicker').textContent = `${d.dow} · ${d.focus}`;
+  $('wo-title').textContent = `Day 0${i+1} — ${d.name}`;
+  const sets = d.ex.reduce((n,e)=>n+e[1],0);
+  $('wo-sum').innerHTML =
+    `<span><b>7</b> lifts</span><span><b>${sets}</b> sets</span><span><b>${d.min}</b> min</span><span><b>5→12</b> rep range</span>`;
+  $('wo-list').innerHTML = d.ex.map((e,j)=>`
+    <div class="exrow">
+      <span class="no">0${j+1}</span>
+      <span><span class="nm">${e[0]}</span><br><span class="sr">${e[1]} × ${e[2]} · rest ${e[4]}</span></span>
+      <span class="chip ${e[3]}">${e[3]}</span>
+    </div>`).join('');
+  go('scr-workout');
+}
+
+function startWorkout(){ curEx = 0; renderEx(); go('scr-player'); }
+
+function renderEx(){
+  const d = DAYS[curDay], e = d.ex[curEx];
+  $('pl-crumb').textContent = `Day 0${curDay+1} — ${d.name}`;
+  $('pl-bar').innerHTML = d.ex.map((_,j)=>`<i class="${j<=curEx?'on':''}"></i>`).join('');
+  $('pl-num').textContent = `0${curEx+1} / 07`;
+  $('pl-loadchip').innerHTML = `<span class="chip ${e[3]}">${e[3]}</span>`;
+  let svg = FIGS[e[5]]();
+  if(REDUCED) svg = svg.replace(/<animateTransform[^>]*\/>/g,'');
+  $('pl-fig').innerHTML = svg;
+  $('pl-name').textContent = e[0];
+  $('pl-sets').textContent = e[1];
+  $('pl-reps').textContent = e[2];
+  $('pl-rest').textContent = e[4];
+  $('pl-cue').textContent = e[6];
+  $('pl-prev').disabled = curEx===0;
+  $('pl-next').textContent = curEx===6 ? 'Finish' : 'Next lift';
+}
+function stepEx(dir){
+  if(dir>0 && curEx===6){ showDone(); return; }
+  curEx = Math.max(0, Math.min(6, curEx+dir));
+  renderEx();
+}
+function showDone(){
+  const d = DAYS[curDay];
+  const sets = d.ex.reduce((n,e)=>n+e[1],0);
+  $('dn-kicker').textContent = `Day 0${curDay+1} — ${d.name}`;
+  $('dn-stats').innerHTML =
+    `<div class="cell"><b>7</b><span>Lifts</span></div>
+     <div class="cell"><b>${sets}</b><span>Sets</span></div>
+     <div class="cell"><b>${d.min}</b><span>Minutes</span></div>`;
+  go('scr-done');
+}
+function finishDay(){
+  doneDays.add(curDay);
+  renderDays();
+  go('scr-train');
+}
+
+function renderSups(){
+  $('suplist').innerHTML = SUPS.map((s,i)=>`
+    <button class="suprow" id="sup${i}" onclick="this.classList.toggle('on')">
+      <span class="when">${s[0]}</span>
+      <span><span class="sn">${s[1]}</span><br><span class="sd">${s[3]}</span></span>
+      <span class="dose" style="margin-left:auto">${s[2]}</span>
+      <span class="tick">
+        <svg width="13" height="13" viewBox="0 0 13 13"><path d="M2.5 7l3 3 5-7" stroke="#0B0E11" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </button>`).join('');
+}
+
+/* water dots */
+document.querySelectorAll('#water i').forEach(dot=>{
+  dot.addEventListener('click',()=>dot.classList.toggle('on'));
+});
+
+/* fake video playback */
+const vid = $('vid');
+function toggleVid(){
+  const playing = vid.classList.toggle('playing');
+  $('vplay').innerHTML = playing
+    ? '<svg width="20" height="20" viewBox="0 0 20 20"><path d="M6 4h3v12H6zM11 4h3v12h-3z" fill="#0B0E11"/></svg>'
+    : '<svg width="22" height="22" viewBox="0 0 22 22"><path d="M7 4.5v13l11-6.5z" fill="#0B0E11"/></svg>';
+  if(!playing) $('vfill').style.width = '0%';
+}
+vid.addEventListener('click', toggleVid);
+vid.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleVid(); }});
+
+renderDays();
+renderSups();
+</script>
