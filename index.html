@@ -330,12 +330,73 @@
   .tab svg{display:none}
   .tab.on{color:var(--sun);background:none}
 
+  /* ---------- Option 2 — Noir ---------- */
+  html[data-ui="noir"]{
+    --ink:#131110; --panel:#1C1917; --card:#1B1815; --card2:#242019; --line:#2E2A24;
+    --bone:#EDE8DD; --mut:#9A917F; --dim:#6B6355;
+    --sun:#C29A5B; --sun-deep:#A17C41; --onsun:#131110;
+    --ember:#C4574A; --mint:#7FA98E; --steel:#8B99A3; --b2:#4A443B;
+    --ghost:#221E19;
+    --stage:radial-gradient(1200px 700px at 50% 18%,#1B1714 0%,var(--ink) 60%);
+    --paytint:rgba(194,154,91,.06); --donetint:rgba(194,154,91,.1); --playerbg:#1D1A16;
+  }
+  html[data-ui="noir"] .phone{border-color:#4A443B;box-shadow:0 0 0 10px #060504,0 0 0 11px #4A443B,0 50px 100px -30px rgba(0,0,0,.8)}
+
+  /* ---------- Option 3 — Gallery ---------- */
+  html[data-ui="gallery"]{
+    --ink:#FBFBF9; --panel:#F1F1ED; --card:#FFFFFF; --card2:#F5F5F1; --line:#E0E0DA;
+    --bone:#111110; --mut:#63635C; --dim:#9C9C94;
+    --sun:#111110; --sun-deep:#000000; --onsun:#FBFBF9;
+    --ember:#B3241E; --mint:#40634D; --steel:#7C838B; --b2:#C6C6BE;
+    --ghost:#EFEFEA;
+    --stage:radial-gradient(1200px 700px at 50% 18%,#FFFFFF 0%,var(--ink) 60%);
+    --paytint:rgba(17,17,16,.03); --donetint:rgba(17,17,16,.05); --playerbg:#F2F2EE;
+  }
+
+  /* ---------- Option 4 — Heritage ---------- */
+  html[data-ui="heritage"]{
+    --ink:#F0EBDD; --panel:#E6DFCC; --card:#F7F3E8; --card2:#EBE5D3; --line:#D9D1BA;
+    --bone:#1F2B1D; --mut:#5F6B54; --dim:#94987F;
+    --sun:#2E5339; --sun-deep:#22402B; --onsun:#F7F3E8;
+    --ember:#7E2D26; --mint:#96733B; --steel:#5E7286; --b2:#B7AE93;
+    --ghost:#E2DBC6;
+    --stage:radial-gradient(1200px 700px at 50% 18%,#F5F1E4 0%,var(--ink) 60%);
+    --paytint:rgba(46,83,57,.05); --donetint:rgba(46,83,57,.08); --playerbg:#EAE4D2;
+  }
+
+  /* ---------- Option 5 — Marine ---------- */
+  html[data-ui="marine"]{
+    --ink:#F6F4EE; --panel:#ECE9E0; --card:#FCFBF7; --card2:#EFECE3; --line:#DCD8CC;
+    --bone:#152238; --mut:#54617A; --dim:#8E97A8;
+    --sun:#97742F; --sun-deep:#7A5C22; --onsun:#F6F4EE;
+    --ember:#8E2F3C; --mint:#2F6D66; --steel:#4C6E8E; --b2:#AFB4BF;
+    --ghost:#E5E1D5;
+    --stage:radial-gradient(1200px 700px at 50% 18%,#FAF8F3 0%,var(--ink) 60%);
+    --paytint:rgba(151,116,47,.05); --donetint:rgba(151,116,47,.08); --playerbg:#EEEBE1;
+  }
+
+  /* ---------- option switcher ---------- */
+  .uiswitch{
+    position:fixed;top:22px;right:26px;z-index:99;
+    display:flex;gap:2px;align-items:center;
+    background:rgba(22,19,15,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border:1px solid rgba(120,110,95,.35);border-radius:0;padding:5px;
+  }
+  .uiswitch .uilabel{font-size:8.5px;color:#9A917F;letter-spacing:.22em;padding:0 8px 0 10px}
+  .uibtn{
+    font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+    color:#9A917F;padding:9px 12px;white-space:nowrap;
+  }
+  .uibtn.on{background:#EDE8DD;color:#16130F}
+
   /* ---------- responsive ---------- */
   @media (max-width:560px){
     .stage{padding:0}
     .ghost,.board{display:none}
     .phone{width:100%;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
     .island{display:none}
+    .uiswitch{top:8px;right:8px;transform:scale(.82);transform-origin:top right}
+    .uiswitch .uilabel{display:none}
   }
   @media (prefers-reduced-motion:reduce){
     .vid.playing .vprog i{transition:none}
@@ -594,6 +655,15 @@
 
     </div><!-- /app -->
   </div><!-- /phone -->
+
+  <div class="uiswitch" role="group" aria-label="Switch design option">
+    <span class="uilabel">OPTION</span>
+    <button class="uibtn on" data-ui="ivory">1 · Ivory</button>
+    <button class="uibtn" data-ui="noir">2 · Noir</button>
+    <button class="uibtn" data-ui="gallery">3 · Gallery</button>
+    <button class="uibtn" data-ui="heritage">4 · Heritage</button>
+    <button class="uibtn" data-ui="marine">5 · Marine</button>
+  </div>
 </div>
 
 <script>
@@ -921,6 +991,14 @@ function toggleVid(){
 }
 vid.addEventListener('click', toggleVid);
 vid.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleVid(); }});
+
+/* design option switcher */
+document.querySelectorAll('.uibtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.documentElement.dataset.ui = b.dataset.ui;
+    document.querySelectorAll('.uibtn').forEach(x=>x.classList.toggle('on', x===b));
+  });
+});
 
 renderDays();
 renderSups();
