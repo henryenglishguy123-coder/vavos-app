@@ -15,6 +15,15 @@
     --ember:#FF5A36;
     --mint:#4EC9A4;
     --steel:#7FA3BF;
+    --onsun:#141004;
+    --b2:#3A4854;
+    --ghost:#232D37;
+    --stage:radial-gradient(1200px 700px at 50% 20%, #11161C 0%, var(--ink) 62%);
+    --paytint:rgba(247,168,27,.05);
+    --donetint:rgba(247,168,27,.09);
+    --playerbg:#141B23;
+    --grad1:var(--sun);
+    --grad2:var(--sun);
     --disp:"Avenir Next Condensed","AvenirNextCondensed-Heavy","Arial Narrow",ui-sans-serif,sans-serif;
     --body:-apple-system,BlinkMacSystemFont,"Segoe UI",ui-sans-serif,sans-serif;
   }
@@ -33,8 +42,7 @@
   .stage{
     position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
     padding:48px 24px;overflow:hidden;
-    background:
-      radial-gradient(1200px 700px at 50% 20%, #11161C 0%, var(--ink) 62%);
+    background:var(--stage);
   }
   .ghost{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
@@ -43,7 +51,7 @@
   .ghost span{
     font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;
     font-size:min(31vw,430px);line-height:.8;letter-spacing:-.01em;
-    color:transparent;-webkit-text-stroke:1px #232D37;
+    color:transparent;-webkit-text-stroke:1px var(--ghost);
   }
   .board{position:absolute;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);line-height:2}
   .board b{color:var(--mut);font-weight:600}
@@ -66,6 +74,7 @@
     position:absolute;top:0;left:0;right:0;height:44px;z-index:40;
     display:flex;align-items:center;justify-content:space-between;
     padding:12px 30px 0;font-size:14px;font-weight:600;pointer-events:none;
+    color:var(--bone);
   }
   .statusbar svg{display:block}
   .island{
@@ -96,7 +105,7 @@
 
   /* ---------- paywall ---------- */
   #scr-pay{padding-top:76px;background:
-    linear-gradient(180deg,rgba(247,168,27,.05),transparent 34%),var(--ink)}
+    linear-gradient(180deg,var(--paytint),transparent 34%),var(--ink)}
   .pay-logo{display:flex;align-items:center;gap:10px}
   .slashmark{color:var(--sun);font-family:var(--disp);font-weight:800;font-style:italic;font-size:22px}
   .pay-head{font-size:66px;line-height:.85;margin:26px 0 14px}
@@ -115,7 +124,7 @@
   .per{color:var(--mut);font-size:13px}
   .cta{
     display:block;width:100%;padding:17px;border-radius:14px;
-    background:var(--sun);color:#141004;
+    background:linear-gradient(100deg,var(--grad1),var(--grad2));color:var(--onsun);
     font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;
     font-size:19px;letter-spacing:.03em;text-align:center;
   }
@@ -137,15 +146,15 @@
     border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
     font-family:var(--disp);font-weight:800;font-style:italic;font-size:14px;color:var(--mut);
   }
-  .daycard.today .dow{background:var(--sun);border-color:var(--sun);color:#141004}
+  .daycard.today .dow{background:var(--sun);border-color:var(--sun);color:var(--onsun)}
   .daycard .dn{display:block;font-family:var(--disp);font-weight:800;font-style:italic;font-size:20px;text-transform:uppercase;line-height:1.05}
   .daycard .df{display:block;font-size:12px;color:var(--mut);margin-top:2px}
   .daycard .dside{margin-left:auto;text-align:right;flex:none}
   .daycard .dmin{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
   .st{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
     padding:3px 8px;border-radius:99px;margin-bottom:5px}
-  .st.done{color:var(--mint);background:rgba(78,201,164,.1)}
-  .st.today{color:#141004;background:var(--sun)}
+  .st.done{color:var(--mint);background:rgb(from var(--mint) r g b / .1)}
+  .st.today{color:var(--onsun);background:var(--sun)}
   .st.next{color:var(--dim);background:var(--panel);border:1px solid var(--line)}
   .strip{height:3px;border-radius:3px;background:var(--panel);margin-top:14px;overflow:hidden}
   .strip i{display:block;height:100%;width:60%;background:var(--sun);border-radius:3px}
@@ -168,14 +177,14 @@
     margin-left:auto;flex:none;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
     padding:4px 9px;border-radius:99px;border:1px solid;
   }
-  .chip.Heavy{color:var(--ember);border-color:rgba(255,90,54,.4);background:rgba(255,90,54,.08)}
-  .chip.Moderate{color:var(--sun);border-color:rgba(247,168,27,.4);background:rgba(247,168,27,.07)}
-  .chip.Light{color:var(--mint);border-color:rgba(78,201,164,.4);background:rgba(78,201,164,.07)}
+  .chip.Heavy{color:var(--ember);border-color:rgb(from var(--ember) r g b / .4);background:rgb(from var(--ember) r g b / .08)}
+  .chip.Moderate{color:var(--sun);border-color:rgb(from var(--sun) r g b / .4);background:rgb(from var(--sun) r g b / .07)}
+  .chip.Light{color:var(--mint);border-color:rgb(from var(--mint) r g b / .4);background:rgb(from var(--mint) r g b / .07)}
   .startwrap{margin-top:auto;padding-top:20px}
 
   /* ---------- player ---------- */
   #scr-player{background:
-    radial-gradient(600px 340px at 50% 30%,#141B23 0%,var(--ink) 75%)}
+    radial-gradient(600px 340px at 50% 30%,var(--playerbg) 0%,var(--ink) 75%)}
   .pbar{display:flex;gap:5px;margin:6px 0 18px}
   .pbar i{flex:1;height:3px;border-radius:3px;background:var(--panel)}
   .pbar i.on{background:var(--sun)}
@@ -185,7 +194,8 @@
   }
   .figwrap svg.fig{display:block;width:100%;height:auto}
   .fig .b{stroke:var(--bone);stroke-width:8;stroke-linecap:round;fill:none}
-  .fig .b2{stroke:#3A4854;stroke-width:8;stroke-linecap:round;fill:none}
+  .fig .b2{stroke:var(--b2);stroke-width:8;stroke-linecap:round;fill:none}
+  .fig .pin{fill:var(--card)}
   .fig .h{fill:var(--bone)}
   .fig .a{stroke:var(--sun);stroke-width:5;stroke-linecap:round;fill:none}
   .fig .p{fill:var(--sun)}
@@ -209,15 +219,15 @@
     font-family:var(--disp);font-weight:800;font-style:italic;text-transform:uppercase;
     font-size:17px;letter-spacing:.03em}
   .btn2.ghosty{border:1px solid var(--line);color:var(--mut)}
-  .btn2.solid{background:var(--sun);color:#141004}
+  .btn2.solid{background:linear-gradient(100deg,var(--grad1),var(--grad2));color:var(--onsun)}
   .btn2:active{transform:translateY(1px)}
   .btn2[disabled]{opacity:.35;pointer-events:none}
 
   /* ---------- done ---------- */
   #scr-done{align-items:center;justify-content:center;text-align:center;background:
-    radial-gradient(500px 400px at 50% 38%,rgba(247,168,27,.09),transparent 70%),var(--ink)}
-  .bigcheck{width:92px;height:92px;border-radius:50%;background:var(--sun);
-    display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+    radial-gradient(500px 400px at 50% 38%,var(--donetint),transparent 70%),var(--ink)}
+  .bigcheck{width:92px;height:92px;border-radius:50%;background:linear-gradient(120deg,var(--grad1),var(--grad2));
+    color:var(--onsun);display:flex;align-items:center;justify-content:center;margin-bottom:24px}
   .donestats{display:flex;gap:26px;margin:22px 0 34px}
   .donestats .cell b{display:block;font-family:var(--disp);font-weight:800;font-style:italic;font-size:28px;font-variant-numeric:tabular-nums}
   .donestats .cell span{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
@@ -257,7 +267,7 @@
   .suprow .sd{font-size:12px;color:var(--mut);margin-top:2px;line-height:1.4}
   .suprow .dose{font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
   .tick{
-    margin-left:auto;flex:none;width:24px;height:24px;border-radius:8px;
+    margin-left:auto;flex:none;width:24px;height:24px;border-radius:8px;color:var(--onsun);
     border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center}
   .suprow.on .tick{background:var(--mint);border-color:var(--mint)}
   .suprow.on .sn{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--dim)}
@@ -289,7 +299,7 @@
   .vcoach{font-size:12px;color:var(--mut);margin-top:6px}
   .streak{
     flex:none;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sun);
-    border:1px solid rgba(247,168,27,.35);border-radius:99px;padding:5px 11px;font-variant-numeric:tabular-nums}
+    border:1px solid rgb(from var(--sun) r g b / .35);border-radius:99px;padding:5px 11px;font-variant-numeric:tabular-nums}
   .quote{
     margin-top:18px;border-left:2px solid var(--sun);padding:4px 0 4px 14px;
     font-size:15px;line-height:1.55;color:var(--bone)}
@@ -304,7 +314,7 @@
   .tabbar{
     position:absolute;left:0;right:0;bottom:0;z-index:30;display:none;
     padding:10px 14px 26px;
-    background:linear-gradient(180deg,rgba(11,14,17,0),rgba(11,14,17,.92) 30%,#0B0E11 60%);
+    background:linear-gradient(180deg,rgb(from var(--ink) r g b / 0),rgb(from var(--ink) r g b / .92) 30%,var(--ink) 60%);
   }
   .tabbar.show{display:block}
   .tabbar .inner{
@@ -316,7 +326,92 @@
     font-family:var(--disp);font-weight:800;font-style:italic;
     font-size:11px;letter-spacing:.06em;text-transform:uppercase}
   .tab svg{display:block}
-  .tab.on{color:var(--sun);background:rgba(247,168,27,.08)}
+  .tab.on{color:var(--sun);background:rgb(from var(--sun) r g b / .1)}
+
+  /* ---------- UI option B — Clipboard (light, clinical) ---------- */
+  html[data-ui="b"]{
+    --ink:#EDEFE9; --panel:#E2E5DD; --card:#FFFFFF; --card2:#F4F6F0; --line:#D2D7CC;
+    --bone:#161C18; --mut:#5C685F; --dim:#939C93;
+    --sun:#1F55E6; --sun-deep:#1244CC; --onsun:#F5F8FF;
+    --ember:#C93A22; --mint:#0E7C57; --steel:#3E6E9E; --b2:#ADB6AB;
+    --ghost:#DDE0D7;
+    --stage:radial-gradient(1200px 700px at 50% 20%,#F7F8F4 0%,var(--ink) 62%);
+    --paytint:rgba(31,85,230,.05); --donetint:rgba(31,85,230,.08); --playerbg:#E4E8E0;
+  }
+  html[data-ui="b"] .d,html[data-ui="b"] .wordmark,html[data-ui="b"] .slashmark,
+  html[data-ui="b"] .daycard .dow,html[data-ui="b"] .daycard .dn,html[data-ui="b"] .exrow .no,
+  html[data-ui="b"] .fignum,html[data-ui="b"] .schemerow .cell b,html[data-ui="b"] .btn2,
+  html[data-ui="b"] .cta,html[data-ui="b"] .donestats .cell b,html[data-ui="b"] .kcalrow b,
+  html[data-ui="b"] .suprow .when,html[data-ui="b"] .tab,html[data-ui="b"] .feat .tag,
+  html[data-ui="b"] .ghost span,html[data-ui="b"] .vghost{font-style:normal}
+  html[data-ui="b"] .d{letter-spacing:.02em}
+  html[data-ui="b"] .daycard,html[data-ui="b"] .figwrap,html[data-ui="b"] .macros{border-radius:10px}
+  html[data-ui="b"] .vid{border-radius:10px}
+  html[data-ui="b"] .cta,html[data-ui="b"] .btn2{border-radius:8px}
+  html[data-ui="b"] .daycard .dow{border-radius:6px}
+  html[data-ui="b"] .tabbar .inner{background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(22,28,24,.12)}
+  html[data-ui="b"] .daycard{box-shadow:0 2px 10px rgba(22,28,24,.05)}
+
+  /* ---------- UI option C — Chalk (cream, brutalist) ---------- */
+  html[data-ui="c"]{
+    --ink:#F1EBDD; --panel:#E7DFCC; --card:#FAF6EB; --card2:#F1EBDD; --line:#191510;
+    --bone:#191510; --mut:#564E3B; --dim:#877D66;
+    --sun:#E8420F; --sun-deep:#B93000; --onsun:#FFF6EC;
+    --ember:#191510; --mint:#0C6E42; --steel:#3E5E7E; --b2:#6E6450;
+    --ghost:#DCD3BE;
+    --stage:radial-gradient(1200px 700px at 50% 20%,#F8F3E7 0%,var(--ink) 62%);
+    --paytint:rgba(232,66,15,.06); --donetint:rgba(232,66,15,.08); --playerbg:#EAE3D2;
+  }
+  html[data-ui="c"] .d,html[data-ui="c"] .wordmark,html[data-ui="c"] .slashmark,
+  html[data-ui="c"] .daycard .dow,html[data-ui="c"] .daycard .dn,html[data-ui="c"] .exrow .no,
+  html[data-ui="c"] .fignum,html[data-ui="c"] .schemerow .cell b,html[data-ui="c"] .btn2,
+  html[data-ui="c"] .cta,html[data-ui="c"] .donestats .cell b,html[data-ui="c"] .kcalrow b,
+  html[data-ui="c"] .suprow .when,html[data-ui="c"] .tab,html[data-ui="c"] .feat .tag,
+  html[data-ui="c"] .ghost span,html[data-ui="c"] .vghost{font-style:normal}
+  html[data-ui="c"] .daycard,html[data-ui="c"] .figwrap,html[data-ui="c"] .macros,
+  html[data-ui="c"] .tabbar .inner,html[data-ui="c"] .cta,html[data-ui="c"] .btn2,
+  html[data-ui="c"] .daycard .dow,html[data-ui="c"] .tick,html[data-ui="c"] .vid{
+    border:2px solid var(--line);border-radius:6px}
+  html[data-ui="c"] .daycard,html[data-ui="c"] .cta,html[data-ui="c"] .tabbar .inner{box-shadow:4px 4px 0 var(--line)}
+  html[data-ui="c"] .figwrap{box-shadow:6px 6px 0 var(--line)}
+  html[data-ui="c"] .btn2.solid{box-shadow:4px 4px 0 var(--line)}
+  html[data-ui="c"] .chip{border-width:2px;border-radius:4px}
+  html[data-ui="c"] .st{border-radius:4px}
+  html[data-ui="c"] .playbtn{border:2px solid var(--line)}
+
+  /* ---------- UI option D — Pulse (violet, gradient glow) ---------- */
+  html[data-ui="d"]{
+    --ink:#0E0A24; --panel:#191243; --card:#1B1548; --card2:#251D5C; --line:#322A6A;
+    --bone:#F1EFFF; --mut:#9D96CC; --dim:#665F99;
+    --sun:#FF5677; --sun-deep:#D63558; --onsun:#FFFFFF;
+    --ember:#FFA23B; --mint:#43E0B0; --steel:#7B9BE8; --b2:#4B4680;
+    --ghost:#251D56;
+    --stage:radial-gradient(1200px 700px at 50% 20%,#171040 0%,var(--ink) 62%);
+    --paytint:rgba(255,86,119,.07); --donetint:rgba(177,75,255,.12); --playerbg:#1B1450;
+    --grad1:#FF5677; --grad2:#B14BFF;
+  }
+  html[data-ui="d"] .daycard{border-radius:22px}
+  html[data-ui="d"] .figwrap,html[data-ui="d"] .macros,html[data-ui="d"] .vid{border-radius:24px}
+  html[data-ui="d"] .cta,html[data-ui="d"] .btn2,html[data-ui="d"] .tabbar .inner{border-radius:99px}
+  html[data-ui="d"] .daycard .dow{border-radius:50%}
+  html[data-ui="d"] .cta{box-shadow:0 12px 34px rgba(177,75,255,.35)}
+  html[data-ui="d"] .strip i,html[data-ui="d"] .pbar i.on{background:linear-gradient(90deg,var(--grad1),var(--grad2))}
+  html[data-ui="d"] .st.today,html[data-ui="d"] .daycard.today .dow{background:linear-gradient(120deg,var(--grad1),var(--grad2))}
+  html[data-ui="d"] .daycard.today .dow{border-color:transparent}
+
+  /* ---------- UI switcher ---------- */
+  .uiswitch{
+    position:fixed;top:22px;right:26px;z-index:99;
+    display:flex;gap:4px;align-items:center;
+    background:rgba(10,12,16,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border:1px solid #2A333C;border-radius:99px;padding:5px;
+  }
+  .uiswitch .uilabel{font-size:9px;color:#8494A1;letter-spacing:.18em;padding:0 6px 0 10px}
+  .uibtn{
+    font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;
+    color:#8494A1;padding:8px 12px;border-radius:99px;white-space:nowrap;
+  }
+  .uibtn.on{background:#EDF1F4;color:#0B0E11}
 
   /* ---------- responsive ---------- */
   @media (max-width:560px){
@@ -324,6 +419,8 @@
     .ghost,.board{display:none}
     .phone{width:100%;height:100vh;height:100dvh;border-radius:0;border:none;box-shadow:none}
     .island{display:none}
+    .uiswitch{top:8px;right:8px;transform:scale(.85);transform-origin:top right}
+    .uiswitch .uilabel{display:none}
   }
   @media (prefers-reduced-motion:reduce){
     .vid.playing .vprog i{transition:none}
@@ -342,9 +439,9 @@
     <b>RANGE</b> 5 REPS HEAVY → 12 REPS LIGHT<br>
     <b>MEMBERSHIP</b> <span class="sun">$20 / MONTH</span>
     <div class="swatches" aria-hidden="true">
-      <i style="background:#0B0E11"></i><i style="background:#161D24"></i>
-      <i style="background:#F7A81B"></i><i style="background:#FF5A36"></i>
-      <i style="background:#4EC9A4"></i><i style="background:#EDF1F4"></i>
+      <i style="background:var(--ink)"></i><i style="background:var(--card)"></i>
+      <i style="background:var(--sun)"></i><i style="background:var(--ember)"></i>
+      <i style="background:var(--mint)"></i><i style="background:var(--bone)"></i>
     </div>
   </div>
   <div class="board board-br">
@@ -357,14 +454,14 @@
     <div class="statusbar" aria-hidden="true">
       <span>9:41</span>
       <svg width="62" height="12" viewBox="0 0 62 12" fill="none">
-        <rect x="0" y="7" width="3" height="5" rx="1" fill="#EDF1F4"/>
-        <rect x="5" y="5" width="3" height="7" rx="1" fill="#EDF1F4"/>
-        <rect x="10" y="3" width="3" height="9" rx="1" fill="#EDF1F4"/>
-        <rect x="15" y="1" width="3" height="11" rx="1" fill="#EDF1F4"/>
-        <path d="M25 5.5a8 8 0 0 1 11 0M27.5 8a4.5 4.5 0 0 1 6 0M30.5 10.6l-.1.1" stroke="#EDF1F4" stroke-width="1.8" stroke-linecap="round"/>
-        <rect x="41" y="1.5" width="18" height="9" rx="2.6" stroke="#EDF1F4" stroke-opacity=".5"/>
-        <rect x="43" y="3.5" width="12" height="5" rx="1.2" fill="#EDF1F4"/>
-        <path d="M60.5 4.5v3a1.7 1.7 0 0 0 0-3z" fill="#EDF1F4" fill-opacity=".5"/>
+        <rect x="0" y="7" width="3" height="5" rx="1" fill="currentColor"/>
+        <rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/>
+        <rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/>
+        <rect x="15" y="1" width="3" height="11" rx="1" fill="currentColor"/>
+        <path d="M25 5.5a8 8 0 0 1 11 0M27.5 8a4.5 4.5 0 0 1 6 0M30.5 10.6l-.1.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <rect x="41" y="1.5" width="18" height="9" rx="2.6" stroke="currentColor" stroke-opacity=".5"/>
+        <rect x="43" y="3.5" width="12" height="5" rx="1.2" fill="currentColor"/>
+        <path d="M60.5 4.5v3a1.7 1.7 0 0 0 0-3z" fill="currentColor" fill-opacity=".5"/>
       </svg>
     </div>
 
@@ -455,7 +552,7 @@
       <!-- ============ DONE ============ -->
       <section class="screen" id="scr-done" data-tabbar="off">
         <div class="bigcheck">
-          <svg width="40" height="40" viewBox="0 0 40 40"><path d="M10 21l7 7 13-16" stroke="#141004" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="40" height="40" viewBox="0 0 40 40"><path d="M10 21l7 7 13-16" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <p class="kicker" id="dn-kicker">Day 04 — Upper</p>
         <h1 class="d big">Session<br>complete.</h1>
@@ -582,6 +679,14 @@
 
     </div><!-- /app -->
   </div><!-- /phone -->
+
+  <div class="uiswitch" role="group" aria-label="Switch UI option">
+    <span class="uilabel">UI</span>
+    <button class="uibtn on" data-ui="a">A · Voltage</button>
+    <button class="uibtn" data-ui="b">B · Clipboard</button>
+    <button class="uibtn" data-ui="c">C · Chalk</button>
+    <button class="uibtn" data-ui="d">D · Pulse</button>
+  </div>
 </div>
 
 <script>
@@ -652,7 +757,7 @@ const T = (x1,y1,x2,y2,d=2.2)=>`<animateTransform attributeName="transform" type
 const SCY = (s1,s2,d=2.2)=>`<animateTransform attributeName="transform" type="scale" values="1 ${s1};1 ${s2};1 ${s1}" ${EASE} dur="${d}s" repeatCount="indefinite"/>`;
 const L = (x1,y1,x2,y2,c='b')=>`<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
 const HEAD = (x,y)=>`<circle class="h" cx="${x}" cy="${y}" r="11"/>`;
-const PLATE = (x,y,r=14)=>`<circle class="p" cx="${x}" cy="${y}" r="${r}"/><circle cx="${x}" cy="${y}" r="3.5" fill="#0B0E11"/>`;
+const PLATE = (x,y,r=14)=>`<circle class="p" cx="${x}" cy="${y}" r="${r}"/><circle class="pin" cx="${x}" cy="${y}" r="3.5"/>`;
 const BELL = (x,y,r=8)=>`<circle class="p" cx="${x}" cy="${y}" r="${r}"/>`;
 const wrap = inner=>`<svg class="fig" viewBox="0 0 240 240" aria-hidden="true">${L(26,212,214,212,'gnd')}${inner}</svg>`;
 
@@ -888,7 +993,7 @@ function renderSups(){
       <span><span class="sn">${s[1]}</span><br><span class="sd">${s[3]}</span></span>
       <span class="dose" style="margin-left:auto">${s[2]}</span>
       <span class="tick">
-        <svg width="13" height="13" viewBox="0 0 13 13"><path d="M2.5 7l3 3 5-7" stroke="#0B0E11" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="13" height="13" viewBox="0 0 13 13"><path d="M2.5 7l3 3 5-7" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
     </button>`).join('');
 }
@@ -909,6 +1014,15 @@ function toggleVid(){
 }
 vid.addEventListener('click', toggleVid);
 vid.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleVid(); }});
+
+/* UI option switcher */
+document.querySelectorAll('.uibtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.documentElement.dataset.ui = b.dataset.ui;
+    document.querySelectorAll('.uibtn').forEach(x=>x.classList.toggle('on', x===b));
+  });
+});
+document.documentElement.dataset.ui = 'a';
 
 renderDays();
 renderSups();
